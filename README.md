@@ -15,7 +15,7 @@ Initial call-focused media buying workspace. Meta Ads, Google Ads, and SEO have 
 
 ## Not implemented yet
 
-Meta/Google OAuth, live reporting, Search Console sync, real keyword pricing/volume, call-tracking integration, image generation, ad publishing, background schedules, automatic optimizations, and multi-user database storage. No platform action or advertising spend is performed by this version. AI cannot perform actions or fetch external data.
+One-click Meta/Google OAuth, live reporting, Search Console sync, real keyword pricing/volume, call-tracking integration, image generation, ad publishing, background schedules, automatic optimizations, and multi-user database storage. No platform action or advertising spend is performed by this version. AI cannot perform actions or fetch external data.
 
 Client profiles, CSV data, and drafts stay in the browser's localStorage. There is no cross-device sync. JSON backup export is included; backup restore is not yet implemented. Export important work before clearing browser storage. This is an initial private workspace, not a production multi-tenant agency service.
 
@@ -67,3 +67,11 @@ One row per date/channel/campaign. Channels: `meta`, `google`, `seo`. Dates: YYY
 `npm run check` checks JavaScript syntax. `npm test` checks CSV parsing, calculations, authentication, HTTP assets, and AI response handling using a stub provider. Browser visual QA, live ad integrations, and live AI billing are not verified by these tests.
 
 References: https://render.com/docs/free and https://developers.openai.com/api/reference/resources/responses/methods/create
+
+## In-app connections (update)
+
+Open Connections, select a real client, and enter provider credentials. No manual Render configuration is needed for these per-client connections. OpenAI verification checks the selected model; Meta verifies an ad account; Google Ads verifies the selected customer; Search Console verifies a property; DataForSEO verifies API account credentials. These checks do not enable report sync, paid keyword requests, or publishing. Google tokens are supplied manually; OAuth consent redirects and refresh are not implemented. Tokens may expire and must be replaced in-app.
+
+Credentials are encrypted with AES-256-GCM using a server key derived from APP_PASSWORD, held in Secure HttpOnly SameSite=Strict cookies, and excluded from localStorage, backups, and API responses. They survive server restarts for 30 days in the same browser. Clearing cookies or changing APP_PASSWORD disconnects them. This browser-bound design avoids Render Free ephemeral disk loss but is not a shared agency credential vault. Existing server-level OPENAI_API_KEY remains a fallback after deleting a browser connection.
+
+The Automation tab stores reusable AI instructions and lets the user run them explicitly. Each run uses the selected client's brief and metrics, incurs normal AI API usage, and saves its text result locally. It does not create schedules or publish ads.
